@@ -2,21 +2,21 @@
 
 ## props
 
-trespassParent:
-Parent mustn't be static, else it won't work.. not finished yet
-default: true
-systemBarColor:
-Sets the color of the systembar
-default: "rgb(230, 230, 230)"
-backgroundColor:
-Sets the color of the background
-default: "white"
-width
-self-explanatory
-default: "290px"
-height
-self-explanatory
-maxHeight
+trespassParent:  
+Parent mustn't be static, else it won't work.. not finished yet  
+default: true  
+systemBarColor:  
+Sets the color of the systembar  
+default: "rgb(230, 230, 230)"  
+backgroundColor:  
+Sets the color of the background  
+default: "white"  
+width  
+self-explanatory  
+default: "290px"  
+height  
+self-explanatory  
+maxHeight  
 self-explanatory
 
 # npm test
