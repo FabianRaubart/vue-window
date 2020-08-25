@@ -1,15 +1,27 @@
 {
-  "name": "vue-window",
-  "version": "0.1.0",
-  "private": true,
+  "name": "vue-window-test",
+  "version": "0.1.10",
+  "main": "dist/vue-window.umd.js",
+  "module": "dist/vue-window.esm.js",
+  "unpkg": "dist/vue-window.min.js",
+  "browser": {
+    "./sfc": "src/vue-window.vue"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/vue-window.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/vue-window.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/vue-window.min.js"
   },
   "dependencies": {
     "vue": "^2.6.11"
   },
   "devDependencies": {
+    "rollup": "^1.17.0",
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "rollup-plugin-vue": "^5.0.1",
     "@vue/cli-service": "~4.5.0",
     "vue-template-compiler": "^2.6.11"
   }
