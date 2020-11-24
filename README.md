@@ -2,8 +2,7 @@
 
 ## props
 
-trespassParent:  
-Parent mustn't be static, else it won't work.. not finished yet  
+trespassParent: 
 default: true  
 systemBarColor:  
 Sets the color of the systembar  
