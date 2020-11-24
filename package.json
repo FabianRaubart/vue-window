@@ -1,6 +1,6 @@
 {
   "name": "vue-window-test",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "main": "dist/vue-window.umd.js",
   "module": "dist/vue-window.esm.js",
   "unpkg": "dist/vue-window.min.js",

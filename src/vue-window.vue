@@ -1,24 +1,15 @@
 <template>
-  <div>
-    <div id="canvas">
-      <div class="vWindow" id="vWindow">
-        <div class="systemBar" id="systemBar">
-          <slot name="systemBarContent">VueWindowTitle</slot>
-
-          <!-- <span id="closeBtn">
-        X
-          </span>-->
-        </div>
-        <div id="vWindow-content">
-          <slot name="content">
-            Content will be inserted here. Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Fugiat magni accusamus qui, aut
-            aliquid numquam reprehenderit cupiditate, soluta placeat, dolores
-            asperiores id at sunt suscipit! Culpa, mollitia nesciunt. Eius,
-            magnam.
-          </slot>
-        </div>
-      </div>
+  <div class="vWindow" :id="vWindowId">
+    <div class="systemBar" :id="systemBarId">
+      <slot name="systemBarContent">VueWindowTitle</slot>
+    </div>
+    <div id="vWindow-content">
+      <slot name="content">
+        Content will be inserted here. Lorem ipsum dolor sit amet consectetur
+        adipisicing elit. Fugiat magni accusamus qui, aut aliquid numquam
+        reprehenderit cupiditate, soluta placeat, dolores asperiores id at sunt
+        suscipit! Culpa, mollitia nesciunt. Eius, magnam.
+      </slot>
     </div>
   </div>
 </template>
@@ -32,16 +23,19 @@ export default {
     width: { type: String, default: "290px" },
     height: { type: String, default: "" },
     maxHeight: { type: String, default: "" },
+    customParentId: { type: String, default: "" },
   },
   data() {
     return {
       isDown: false,
       offset: [0, 0],
+      vWindowId: "",
+      systemBarId: "",
     };
   },
   methods: {
     mousedownfunction(e) {
-      const vWindow = document.getElementById("vWindow");
+      const vWindow = document.getElementById(this.vWindowId);
       this.isDown = true;
       this.offset = [
         vWindow.offsetLeft - e.clientX,
@@ -52,19 +46,20 @@ export default {
       this.isDown = false;
     },
     mousemovefunction(e) {
-      const vWindow = document.getElementById("vWindow");
-
       if (this.isDown) {
+        const vWindow = document.getElementById(this.vWindowId);
         vWindow.style.left = e.clientX + this.offset[0] + "px";
         vWindow.style.top = e.clientY + this.offset[1] + "px";
+        this.preventTrespassingParent();
       }
-      this.preventTrespassingParent();
     },
     preventTrespassingParent() {
-      const vWindow = document.getElementById("vWindow");
-      const systemBar = document.getElementById("systemBar");
+      const vWindow = document.getElementById(this.vWindowId);
+      const systemBar = document.getElementById(this.systemBarId);
       var parent = "";
-      if (this.trespassParent) {
+      if (this.customParentId != "") {
+        parent = document.getElementById(this.customParentId);
+      } else if (this.trespassParent) {
         parent = document.getElementsByTagName("html")[0];
       } else {
         parent = vWindow.parentElement;
@@ -101,7 +96,7 @@ export default {
       }
     },
     makevWindowDraggable() {
-      const systemBar = document.getElementById("systemBar");
+      const systemBar = document.getElementById(this.systemBarId);
       const canvas = document.getElementsByTagName("body")[0];
 
       systemBar.addEventListener("mousedown", this.mousedownfunction);
@@ -110,13 +105,27 @@ export default {
 
       canvas.addEventListener("mousemove", this.mousemovefunction);
     },
+    uuidv4() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    },
+  },
+  created() {
+    // assign Ids
+    this.vWindowId = this.uuidv4();
+    this.systemBarId = this.uuidv4();
   },
   mounted() {
     this.makevWindowDraggable();
     document.getElementById(
-      "systemBar"
+      this.systemBarId
     ).style.backgroundColor = this.systemBarColor;
-    const vWindow = document.getElementById("vWindow");
+    const vWindow = document.getElementById(this.vWindowId);
     vWindow.style.backgroundColor = this.backgroundColor;
     vWindow.style.width = this.width;
     if (this.height !== "") {
@@ -126,11 +135,11 @@ export default {
       vWindow.style.maxHeight = this.maxHeight;
     }
   },
-  destroyed() {
-    const systemBar = document.getElementById("systemBar");
+  beforeDestroy() {
+    // const systemBar = document.getElementById(this.systemBarId);
     const canvas = document.getElementsByTagName("body")[0];
 
-    systemBar.removeEventListener("mousedown", this.mousedownfunction);
+    // systemBar.removeEventListener("mousedown", this.mousedownfunction);
 
     canvas.removeEventListener("mouseup", this.mouseupfunction);
 
@@ -138,7 +147,7 @@ export default {
   },
   watch: {
     isDown() {
-      const vWindow = document.getElementById("vWindow");
+      const vWindow = document.getElementById(this.vWindowId);
       if (this.isDown) {
         vWindow.style.userSelect = "none";
       } else {
@@ -150,12 +159,10 @@ export default {
 </script>
 
 <style>
-* {
-  margin: 0%;
-  padding: 0%;
-}
 .vWindow {
   position: absolute;
+  top: 50%;
+  left: 50%;
   box-shadow: 2px 2px 10px rgb(105, 105, 105);
   border-radius: 5px;
   text-align: left;
@@ -174,28 +181,7 @@ export default {
   cursor: move;
 }
 
-/* #closeBtn {
-  cursor: pointer;
-  height: 0.9em;
-  width: 0.9em;
-  padding: 2px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#closeBtn:hover {
-  background: rgb(201, 201, 201);
-} */
-
 #vWindow-content {
   margin: 0.5em;
-}
-
-#canvas {
-  height: 500px;
-  width: 500px;
-  border: 1px solid black;
-  margin: 100px;
 }
 </style>

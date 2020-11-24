@@ -18,6 +18,7 @@ height
 self-explanatory  
 maxHeight  
 self-explanatory
+customParentId
 
 # npm test
 
