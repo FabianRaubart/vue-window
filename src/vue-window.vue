@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     mousedownfunction(e) {
-      const vWindow = document.getElementById(this.vWindowId);
+      const vWindow = this.$el;
       this.isDown = true;
       this.offset = [
         vWindow.offsetLeft - e.clientX,
@@ -47,14 +47,14 @@ export default {
     },
     mousemovefunction(e) {
       if (this.isDown) {
-        const vWindow = document.getElementById(this.vWindowId);
+        const vWindow = this.$el;
         vWindow.style.left = e.clientX + this.offset[0] + "px";
         vWindow.style.top = e.clientY + this.offset[1] + "px";
         this.preventTrespassingParent();
       }
     },
     preventTrespassingParent() {
-      const vWindow = document.getElementById(this.vWindowId);
+      const vWindow = this.$el;
       const systemBar = document.getElementById(this.systemBarId);
       var parent = "";
       if (this.customParentId != "") {
@@ -98,12 +98,10 @@ export default {
     makevWindowDraggable() {
       const systemBar = document.getElementById(this.systemBarId);
       const canvas = document.getElementsByTagName("body")[0];
-
       systemBar.addEventListener("mousedown", this.mousedownfunction);
-
       canvas.addEventListener("mouseup", this.mouseupfunction);
-
       canvas.addEventListener("mousemove", this.mousemovefunction);
+      this.$el.addEventListener("mousedown", this.increaseZIndex);
     },
     uuidv4() {
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
@@ -114,6 +112,9 @@ export default {
         return v.toString(16);
       });
     },
+    increaseZIndex() {
+      this.$el.style.zIndex = this.$vWindowIndex.value++;
+    },
   },
   created() {
     // assign Ids
@@ -121,11 +122,12 @@ export default {
     this.systemBarId = this.uuidv4();
   },
   mounted() {
+    this.$el.style.zIndex = this.$vWindowIndex.value++;
     this.makevWindowDraggable();
     document.getElementById(
       this.systemBarId
     ).style.backgroundColor = this.systemBarColor;
-    const vWindow = document.getElementById(this.vWindowId);
+    const vWindow = this.$el;
     vWindow.style.backgroundColor = this.backgroundColor;
     vWindow.style.width = this.width;
     if (this.height !== "") {
@@ -147,7 +149,7 @@ export default {
   },
   watch: {
     isDown() {
-      const vWindow = document.getElementById(this.vWindowId);
+      const vWindow = this.$el;
       if (this.isDown) {
         vWindow.style.userSelect = "none";
       } else {
