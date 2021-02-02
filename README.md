@@ -19,6 +19,8 @@ maxHeight
 self-explanatory
 customParentId
 
+add "Vue.prototype.$vWindowIndex = { value: 100 };" to main.js
+
 # npm test
 
 https://www.npmjs.com/package/vue-window-test
